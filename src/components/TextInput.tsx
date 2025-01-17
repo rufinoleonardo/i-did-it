@@ -8,14 +8,20 @@ import {
 interface CustomTextInputProps extends TextInputProps {
   label: string;
   customStyle?: {};
+  secureTextEntry?: boolean;
+  value: string;
+  onChangeText: (value: string) => void;
 }
 
 export const CustomTextInput: React.FC<CustomTextInputProps> = ({
-  textContentType,
   placeholder,
   label,
-  multiline = false,
+  textContentType,
   customStyle,
+  multiline = false,
+  secureTextEntry = false,
+  value,
+  onChangeText,
 }) => {
   return (
     <View style={[Input.container]}>
@@ -25,6 +31,9 @@ export const CustomTextInput: React.FC<CustomTextInputProps> = ({
         placeholder={placeholder}
         multiline={multiline}
         style={[text.p_paragraph, Input.colors, Input.field, customStyle]}
+        secureTextEntry={secureTextEntry}
+        value={value}
+        onChangeText={onChangeText}
       />
     </View>
   );

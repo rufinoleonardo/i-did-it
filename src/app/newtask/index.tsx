@@ -1,37 +1,92 @@
-import { Text, View, StyleSheet } from "react-native";
-import { globalStyles, textStyles } from "../../styles/globalStyles";
-import { CustomTextInput } from "../../components/TextInput";
-import { textContentType } from "../../enums/TextInputType";
-import { SelectInput } from "../../components/SelectInput";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "../../components/Button";
 import { Checkbox } from "../../components/CheckBox";
+import { SelectInput } from "../../components/SelectInput";
+import { CustomTextInput } from "../../components/TextInput";
+import { TaskPriority } from "../../enums/TaskPriority";
+import { textContentType } from "../../enums/TextInputType";
+import { globalStyles, textStyles } from "../../styles/globalStyles";
+
+type FormData = {
+  description: string;
+  priority: TaskPriority;
+  isMistake: boolean;
+  observation: string;
+};
 
 const NewTaskScreen: React.FC = () => {
+  const { control, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      description: "",
+      priority: TaskPriority.COMMON,
+      isMistake: false,
+      observation: "",
+    },
+  });
+
+  const handleSave: SubmitHandler<FormData> = (data) => {
+    console.log("Dados do Formulário: ", data);
+  };
+
   return (
     <View style={globalStyles.pageContainer}>
       <Text style={[textStyles.h3_subHeading, textStyles.textLight]}>
         New Task
       </Text>
 
-      <CustomTextInput
-        label="Description"
-        placeholder="Description here"
-        textContentType={textContentType.name}
+      <Controller
+        name="description"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <CustomTextInput
+            label="Description"
+            placeholder="Description here"
+            textContentType={textContentType.name}
+            value={value}
+            onChangeText={onChange}
+          />
+        )}
       />
 
-      <SelectInput
-        dataList={["LOW", "COMMON", "HIGH"]}
-        placeholder="Select the priority"
-        label="Priority"
+      <Controller
+        name="priority"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <SelectInput
+            dataList={Object.values(TaskPriority)}
+            placeholder="Select the priority"
+            label="Priority"
+            onValueChange={onChange}
+            selectedValue={value}
+          />
+        )}
       />
 
-      <Checkbox label="It was a mistake" />
-
-      <CustomTextInput
-        label="Observation"
-        placeholder="If it was a mistake, why did it occur or how did you solve it"
-        multiline={true}
-        customStyle={style.custom}
+      <Controller
+        name="isMistake"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <Checkbox label="It was a mistake" onCheckChange={onChange} />
+        )}
       />
+
+      <Controller
+        name="observation"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <CustomTextInput
+            label="Observation"
+            placeholder="If it was a mistake, why did it occur or how did you solve it"
+            multiline={true}
+            customStyle={style.custom}
+            value={value}
+            onChangeText={onChange}
+          />
+        )}
+      />
+
+      <Button text="Save" onButtonPress={handleSubmit(handleSave)} />
     </View>
   );
 };

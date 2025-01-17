@@ -9,12 +9,16 @@ interface SelectInputProps {
   label: string;
   dataList: string[];
   placeholder: string;
+  selectedValue: String;
+  onValueChange: (value: string) => void;
 }
 
 export const SelectInput: React.FC<SelectInputProps> = ({
   dataList,
   placeholder,
   label,
+  selectedValue,
+  onValueChange,
 }) => {
   return (
     <View style={[Input.container]}>
@@ -22,8 +26,8 @@ export const SelectInput: React.FC<SelectInputProps> = ({
 
       <SelectDropdown
         data={dataList}
-        onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
+        onSelect={(selectedItem) => {
+          onValueChange(selectedItem);
         }}
         renderButton={(selectedItem, isOpened) => {
           return (
@@ -31,7 +35,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
               style={[styles.dropdownButtonStyle, Input.colors, Input.field]}
             >
               <Text style={styles.dropdownButtonTxtStyle}>
-                {(selectedItem && selectedItem.title) || placeholder}
+                {selectedItem || placeholder}
               </Text>
               <Icon
                 name="arrow-down-drop-circle"
@@ -54,6 +58,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
         }}
         showsVerticalScrollIndicator={false}
         dropdownStyle={styles.dropdownMenuStyle}
+        defaultValue={selectedValue}
       />
     </View>
   );

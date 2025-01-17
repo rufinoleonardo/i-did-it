@@ -1,13 +1,19 @@
+import { View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Colors } from "../styles/globalColors";
-import { View } from "react-native";
 import { CommonInputStyles, textStyles } from "../styles/globalStyles";
 
 interface CheckBoxProps {
   label: string;
+  onCheckChange: (value: boolean) => void;
+  isChecked?: boolean;
 }
 
-export const Checkbox: React.FC<CheckBoxProps> = ({ label }) => {
+export const Checkbox: React.FC<CheckBoxProps> = ({
+  label,
+  onCheckChange,
+  isChecked = false,
+}) => {
   return (
     <View style={CommonInputStyles.field}>
       <BouncyCheckbox
@@ -19,8 +25,9 @@ export const Checkbox: React.FC<CheckBoxProps> = ({ label }) => {
         innerIconStyle={{ borderWidth: 2 }}
         textStyle={[textStyles.p_paragraph, textStyles.textLight]}
         onPress={(isChecked: boolean) => {
-          console.log(isChecked);
+          onCheckChange(isChecked);
         }}
+        isChecked={isChecked}
       />
     </View>
   );
