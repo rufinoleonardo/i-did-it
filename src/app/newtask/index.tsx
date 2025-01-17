@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../../components/Button";
@@ -16,6 +17,7 @@ type FormData = {
 };
 
 const NewTaskScreen: React.FC = () => {
+  const [isMistakeChecked, setIsMistakeChecked] = useState(false);
   const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
       description: "",
@@ -67,24 +69,32 @@ const NewTaskScreen: React.FC = () => {
         name="isMistake"
         control={control}
         render={({ field: { value, onChange } }) => (
-          <Checkbox label="It was a mistake" onCheckChange={onChange} />
-        )}
-      />
-
-      <Controller
-        name="observation"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <CustomTextInput
-            label="Observation"
-            placeholder="If it was a mistake, why did it occur or how did you solve it"
-            multiline={true}
-            customStyle={style.custom}
-            value={value}
-            onChangeText={onChange}
+          <Checkbox
+            label="It was a mistake"
+            onCheckChange={(isChecked) => {
+              onChange(isChecked);
+              setIsMistakeChecked(isChecked);
+            }}
           />
         )}
       />
+
+      {isMistakeChecked && (
+        <Controller
+          name="observation"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <CustomTextInput
+              label="Observation"
+              placeholder="If it was a mistake, why did it occur or how did you solve it"
+              multiline={true}
+              customStyle={style.custom}
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
+        />
+      )}
 
       <Button text="Save" onButtonPress={handleSubmit(handleSave)} />
     </View>

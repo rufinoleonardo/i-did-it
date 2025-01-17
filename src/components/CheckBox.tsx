@@ -23,7 +23,11 @@ export const Checkbox: React.FC<CheckBoxProps> = ({
         text={label}
         iconStyle={{ borderColor: Colors.GRAY_LIGHT }}
         innerIconStyle={{ borderWidth: 2 }}
-        textStyle={[textStyles.p_paragraph, textStyles.textLight]}
+        textStyle={[
+          textStyles.p_paragraph,
+          textStyles.textLight,
+          { textDecorationLine: "none" },
+        ]}
         onPress={(isChecked: boolean) => {
           onCheckChange(isChecked);
         }}
